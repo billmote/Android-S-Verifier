@@ -90,3 +90,7 @@ class AndroidSVerifierApp : Application() {
         PendingIntent.FLAG_UPDATE_CURRENT
     }
 }
+
+inline fun <R> R?.orElse(block: () -> R): R {
+    return this ?: block()
+}

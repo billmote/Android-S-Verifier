@@ -29,7 +29,13 @@ class MainActivity : ComponentActivity() {
                     val contactKey = remember { mutableStateOf("") }
                     SFMCSdk.requestSdk { sdk ->
                         sdk.mp { mp ->
-                            contactKey.value = mp.registrationManager.contactKey ?: ""
+                            mp.registrationManager.contactKey?.let {
+                                contactKey.value = it
+                            }.orElse {
+                                sdk.identity.setProfileId("developer@salesforce.com".also {
+                                    contactKey.value = it
+                                })
+                            }
                         }
                     }
                     Greeting(name = contactKey.value)
