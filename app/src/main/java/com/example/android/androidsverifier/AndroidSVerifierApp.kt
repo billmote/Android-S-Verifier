@@ -38,14 +38,12 @@ class AndroidSVerifierApp : Application() {
                     NotificationCustomizationOptions.create(
                         R.mipmap.ic_launcher,
                         NotificationManager.NotificationLaunchIntentProvider { context, message ->
-                            if (message.url.isNullOrBlank())
+                            message.url?.let {
+                                handleUrlPendingIntent(context, it)
+                            }.orElse {
                                 openAppPendingIntent(context)
-                            else
-                                handleUrlPendingIntent(
-                                    context,
-                                    message.url!!
-                                ) // Handle Notification URLs
-                        },
+                            }
+                        }, // Tell the SDK how to handle notification clicks
                         null // Use SDK's default channel or replace null with your channel
                     )
                 )
