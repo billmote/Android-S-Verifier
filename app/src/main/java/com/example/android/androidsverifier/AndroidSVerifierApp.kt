@@ -23,7 +23,7 @@ import kotlin.random.Random
 class AndroidSVerifierApp : Application() {
     override fun onCreate() {
         super.onCreate()
-        if (BuildConfig.DEBUG) {
+        runIfDebug {
             SFMCSdk.setLogging(LogLevel.DEBUG, LogListener.AndroidLogger())
             MarketingCloudSdk.setLogLevel(VERBOSE)
             MarketingCloudSdk.setLogListener(MCLogListener.AndroidLogListener())
@@ -41,21 +41,22 @@ class AndroidSVerifierApp : Application() {
                             if (message.url.isNullOrBlank())
                                 openAppPendingIntent(context)
                             else
-                                handleUrlPendingIntent(context, message.url!!) // Handle Notification URLs
+                                handleUrlPendingIntent(
+                                    context,
+                                    message.url!!
+                                ) // Handle Notification URLs
                         },
                         null // Use SDK's default channel or replace null with your channel
                     )
                 )
-                setInboxEnabled(true)
                 setAnalyticsEnabled(true)
-                setPiAnalyticsEnabled(true) // If you're not explicitly using this, turn it off
                 setUrlHandler(UrlHandler { context, url, _ ->
                     handleUrlPendingIntent(context, url)
                 }) // Handle InApp Message URLs
             }.build(applicationContext)
         }) { _ ->
-            SFMCSdk.requestSdk { sdk ->
-                if (BuildConfig.DEBUG) {
+            runIfDebug {
+                SFMCSdk.requestSdk { sdk ->
                     Log.i("~#STATE", sdk.getSdkState().toString(2))
                     sdk.mp { push ->
                         push.registrationManager.registerForRegistrationEvents {
@@ -94,3 +95,5 @@ class AndroidSVerifierApp : Application() {
 inline fun <R> R?.orElse(block: () -> R): R {
     return this ?: block()
 }
+
+fun runIfDebug(block: () -> Any?): Any? = if (BuildConfig.DEBUG) block() else Unit
