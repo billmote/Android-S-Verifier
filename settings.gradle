@@ -1,0 +1,17 @@
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        google()
+        mavenCentral()
+    }
+}
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+        maven { url "https://salesforce-marketingcloud.github.io/MarketingCloudSDK-Android/repository" }
+    }
+}
+rootProject.name = "Android S Verifier"
+include ':app'
