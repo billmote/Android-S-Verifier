@@ -1,3 +1,5 @@
+@file:Suppress("FunctionName")
+
 package com.example.android.androidsverifier
 
 import android.os.Bundle

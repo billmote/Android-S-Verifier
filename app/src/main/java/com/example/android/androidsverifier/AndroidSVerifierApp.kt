@@ -11,9 +11,7 @@ import com.salesforce.marketingcloud.MCLogListener
 import com.salesforce.marketingcloud.MCLogListener.Companion.VERBOSE
 import com.salesforce.marketingcloud.MarketingCloudConfig
 import com.salesforce.marketingcloud.MarketingCloudSdk
-import com.salesforce.marketingcloud.UrlHandler
 import com.salesforce.marketingcloud.notifications.NotificationCustomizationOptions
-import com.salesforce.marketingcloud.notifications.NotificationManager
 import com.salesforce.marketingcloud.sfmcsdk.SFMCSdk
 import com.salesforce.marketingcloud.sfmcsdk.SFMCSdkModuleConfig
 import com.salesforce.marketingcloud.sfmcsdk.components.logging.LogLevel
@@ -37,7 +35,7 @@ class AndroidSVerifierApp : Application() {
                 setNotificationCustomizationOptions(
                     NotificationCustomizationOptions.create(
                         R.mipmap.ic_launcher,
-                        NotificationManager.NotificationLaunchIntentProvider { context, message ->
+                        { context, message ->
                             message.url?.let {
                                 handleUrlPendingIntent(context, it)
                             }.orElse {
@@ -48,9 +46,9 @@ class AndroidSVerifierApp : Application() {
                     )
                 )
                 setAnalyticsEnabled(true)
-                setUrlHandler(UrlHandler { context, url, _ ->
+                setUrlHandler { context, url, _ ->
                     handleUrlPendingIntent(context, url)
-                }) // Handle InApp Message URLs
+                } // Handle InApp Message URLs
             }.build(applicationContext)
         }) { _ ->
             runIfDebug {
